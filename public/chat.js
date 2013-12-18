@@ -36,7 +36,6 @@ window.onload = function () {
       removeMessageTyping();
       messages.push(data);
       updateContent();
-      field.value = "";
     } else {
       console.log("Something went wrong");
     }
@@ -54,6 +53,7 @@ window.onload = function () {
       alert("Please type in your name");
     } else {
       socket.emit("send", { message: field.value, username: name.value });
+      field.value = "";
     }
   };
 
