@@ -4,18 +4,22 @@ window.onload = function () {
   var field = document.getElementById("field");
   var sendButton = document.getElementById("send");
   var content = document.getElementById("content");
+  var name = document.getElementById("name");
 
   var updateContent = function () {
     var html = "";
     for (var i = 0; i < messages.length; i++) {
-      html += messages[i] + "<br/>"
+      if (messages[i].username) {
+        html += "<b>" + messages[i].username + ":</b>";
+      }
+      html += messages[i].message + "<br/>";
     }
     content.innerHTML = html;
   };
 
   var messageTypingDisplayed = function () {
     if (messages.length > 0) {
-      var lastMessage = messages[messages.length - 1];
+      var lastMessage = messages[messages.length - 1].message;
       return lastMessage.substring(0, 3) === "<i>";
     }
     return false;
@@ -30,7 +34,7 @@ window.onload = function () {
   socket.on("message", function (data) {
     if (data.message) {
       removeMessageTyping();
-      messages.push(data.message);
+      messages.push(data);
       updateContent();
       field.value = "";
     } else {
@@ -38,20 +42,28 @@ window.onload = function () {
     }
   });
 
-  socket.on("typing_message", function () {
+  socket.on("typing_message", function (data) {
     if (!messageTypingDisplayed()) {
-      messages.push("<i>Someone typing</i>");
+      messages.push(data);
       updateContent();
     }
   });
 
+  var sendMessage = function () {
+    if (name.value === "") {
+      alert("Please type in your name");
+    } else {
+      socket.emit("send", { message: field.value, username: name.value });
+    }
+  };
+
   sendButton.onclick = function () {
-    socket.emit("send", { message: field.value });
+    sendMessage();
   };
 
   field.onkeyup = function (event) {
     if (event.keyCode == 13) {
-      socket.emit("send", { message: field.value });
+      sendMessage();
     }
   };
 

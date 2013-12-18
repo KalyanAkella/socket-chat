@@ -14,13 +14,13 @@ var io = require('socket.io').listen(app.listen(port));
 console.log("Listening on port " + port);
 
 io.sockets.on('connection', function (socket) {
-  socket.emit('message', { message: "welcome to the chat" });
+  socket.emit('message', { message: "welcome to the chat", username: "server" });
 
   socket.on('send', function (data) {
     io.sockets.emit('message', data);
   });
 
-  socket.on('typing', function () {
-    io.sockets.emit('typing_message');
+  socket.on('typing', function (data) {
+    io.sockets.emit('typing_message', { message: "<i>Someone typing</i>" });
   })
 });
