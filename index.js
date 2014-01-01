@@ -22,5 +22,9 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('typing', function (data) {
     io.sockets.emit('typing_message', { message: "<i>Someone typing</i>" });
+  });
+
+  socket.on('twitter_login', function () {
+    //
   })
 });

@@ -5,6 +5,7 @@ window.onload = function () {
   var sendButton = document.getElementById("send");
   var content = document.getElementById("content");
   var name = document.getElementById("name");
+  var twitter = document.getElementById("twitter");
 
   var updateContent = function () {
     var html = "";
@@ -70,4 +71,8 @@ window.onload = function () {
   field.onkeypress = function () {
     socket.emit("typing");
   };
+
+  twitter.onclick = function () {
+    socket.emit("twitter_login");
+  }
 };
