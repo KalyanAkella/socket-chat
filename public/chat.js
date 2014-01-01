@@ -73,6 +73,6 @@ window.onload = function () {
   };
 
   twitter.onclick = function () {
-    socket.emit("twitter_login");
+    window.location.href = "http://localhost:3700/twitter_login";
   }
 };
