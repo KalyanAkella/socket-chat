@@ -1,15 +1,19 @@
+var config = require('./config');
+var twitterConfig = config.twitter;
 var OAuth = require('OAuth').OAuth;
 
 module.exports.login = function (req, res) {
   // TODO - twitter settings must be moved to config file
-  var twitterConsumerKey = 'sSQP13VO7Mg41RbDnYQ';
-  var twitterConsumerSecret = 'jZ44hpTGZSOh96Z4z9TeVcQtehudSzkEt6PXJxY0OZE';
+  var twitterConsumerKey = twitterConfig.key;
+  var twitterConsumerSecret = twitterConfig.secret;
+  var oauthVersion = twitterConfig.oauth.version;
+  var oauthAlgo = twitterConfig.oauth.algo;
 
   var oauth = new OAuth(
     'https://api.twitter.com/oauth/request_token',
     'https://api.twitter.com/oauth/access_token',
-    twitterConsumerKey, twitterConsumerSecret,
-    '1.0A', 'http://localhost:3700/twitter_redirect', 'HMAC-SHA1'
+    twitterConsumerKey, twitterConsumerSecret, oauthVersion,
+    'http://' + config.host + ':' + config.port + '/twitter_redirect', oauthAlgo
   );
 
   oauth.getOAuthRequestToken(function (error, oauth_token, oauth_token_secret, results) {

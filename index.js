@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
-var port = 3700;
 var twitter = require('./twitter');
+var config = require('./config');
 
 app.set("views", __dirname + "/templates");
 app.set("view engine", "jade");
@@ -19,6 +19,7 @@ app.get("/twitter_redirect", twitter.redirect);
 
 app.use(express.static(__dirname + "/public"));
 
+var port = config.port;
 var io = require('socket.io').listen(app.listen(port));
 console.log("Listening on port " + port);
 
