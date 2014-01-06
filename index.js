@@ -11,7 +11,6 @@ app.use(express.session({secret: '1234567890QWERTY'}));
 
 app.get("/", function (req, res) {
   twitter.getUser(req, res);
-  res.render("page");
 });
 
 app.get("/twitter_login", twitter.login);

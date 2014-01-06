@@ -75,17 +75,17 @@ module.exports.getUser = function (req, res) {
     oauth.get('https://api.twitter.com/1.1/account/settings.json',
       req.session.oauth_access_token,
       req.session.oauth_access_token_secret,
-      function (error, data, res) {
+      function (error, data) {
         if (error) {
           console.log("An error occurred while obtaining logged-in user details");
           console.log(error);
         } else {
-          console.log("****************");
-          console.log(require('util').inspect(data));
-          console.dir(data);
-          console.log("****************");
+          var twitter_data = JSON.parse(data);
+          res.render("page", { twitter_logged_in: twitter_data.screen_name });
         }
       }
     );
+  } else {
+    res.render("page");
   }
 };
