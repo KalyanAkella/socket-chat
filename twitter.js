@@ -61,31 +61,31 @@ module.exports.redirect = function (req, res) {
   }
 };
 
-module.exports.getUser = function (req, res) {
-  if (req.session.oauth) {
-    var oauth = new OAuth(
-      req.session.oauth._requestUrl,
-      req.session.oauth._accessUrl,
-      req.session.oauth._consumerKey,
-      req.session.oauth._consumerSecret,
-      req.session.oauth._version,
-      req.session.oauth._authorize_callback,
-      req.session.oauth._signatureMethod
-    );
-    oauth.get('https://api.twitter.com/1.1/account/settings.json',
-      req.session.oauth_access_token,
-      req.session.oauth_access_token_secret,
-      function (error, data) {
-        if (error) {
-          console.log("An error occurred while obtaining logged-in user details");
-          console.log(error);
-        } else {
-          var twitter_data = JSON.parse(data);
-          res.render("page", { twitter_logged_in: twitter_data.screen_name });
-        }
-      }
-    );
-  } else {
-    res.render("page");
+module.exports.getUser = function (req, succ, fail) {
+  if (!req || !req.session || !req.session.oauth) {
+    fail();
+    return;
   }
+  var oauth = new OAuth(
+    req.session.oauth._requestUrl,
+    req.session.oauth._accessUrl,
+    req.session.oauth._consumerKey,
+    req.session.oauth._consumerSecret,
+    req.session.oauth._version,
+    req.session.oauth._authorize_callback,
+    req.session.oauth._signatureMethod
+  );
+  oauth.get('https://api.twitter.com/1.1/account/settings.json',
+    req.session.oauth_access_token,
+    req.session.oauth_access_token_secret,
+    function (error, data) {
+      if (error) {
+        console.log("An error occurred while obtaining logged-in user details");
+        console.log(error);
+        fail();
+      } else {
+        succ(JSON.parse(data));
+      }
+    }
+  );
 };

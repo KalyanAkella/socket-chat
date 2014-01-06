@@ -10,7 +10,11 @@ app.use(express.cookieParser());
 app.use(express.session({secret: '1234567890QWERTY'}));
 
 app.get("/", function (req, res) {
-  twitter.getUser(req, res);
+  twitter.getUser(req, function (twitter_data) {
+    res.render("page", { twitter_logged_in: twitter_data.screen_name });
+  }, function () {
+    res.render("page");
+  });
 });
 
 app.get("/twitter_login", twitter.login);
